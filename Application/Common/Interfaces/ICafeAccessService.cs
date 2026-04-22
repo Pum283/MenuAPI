@@ -2,8 +2,8 @@ namespace Application.Common.Interfaces
 {
     public interface ICafeAccessService
     {
-        Task<bool> CanManageCafeAsync(int userId, int cafeId, CancellationToken cancellationToken = default);
-        Task<bool> IsAdminAsync(int userId, CancellationToken cancellationToken = default);
+        Task<bool> CanManageCafeAsync(Guid userId, Guid cafeId, CancellationToken cancellationToken = default);
+        Task<bool> IsAdminAsync(Guid userId, CancellationToken cancellationToken = default);
     }
 }
 

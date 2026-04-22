@@ -18,6 +18,40 @@ namespace API.Controllers
             _db = db;
         }
 
+        [HttpGet]
+        public async Task<IActionResult> GetAll([FromQuery] string? q, CancellationToken cancellationToken)
+        {
+            var query = _db.Users.AsNoTracking();
+            if (!string.IsNullOrWhiteSpace(q))
+            {
+                var keyword = q.Trim().ToLowerInvariant();
+                query = query.Where(x => x.Email.ToLower().Contains(keyword));
+            }
+
+            var users = await query
+                .OrderBy(x => x.Email)
+                .Select(u => new AdminUserDto
+                {
+                    Id = u.Id,
+                    Email = u.Email,
+                    Status = u.Status.ToString().ToLowerInvariant(),
+                    Roles = u.UserRoles.Select(ur => ur.Role.Code.ToString().ToLowerInvariant()).ToList(),
+                    CafeMemberships = u.CafeMembers
+                        .OrderBy(cm => cm.Cafe.Name)
+                        .Select(cm => new AdminUserCafeMembershipDto
+                        {
+                            CafeId = cm.CafeId,
+                            CafeCode = cm.Cafe.Code,
+                            CafeName = cm.Cafe.Name,
+                            Status = cm.Status.ToString().ToLowerInvariant()
+                        })
+                        .ToList()
+                })
+                .ToListAsync(cancellationToken);
+
+            return Ok(users);
+        }
+
         [HttpPost]
         public async Task<IActionResult> CreateUser([FromBody] CreateUserRequest request, CancellationToken cancellationToken)
         {
@@ -63,8 +97,8 @@ namespace API.Controllers
             return Ok(new { user.Id, user.Email, Role = role.Code.ToString().ToLowerInvariant() });
         }
 
-        [HttpPut("{userId:int}/block")]
-        public async Task<IActionResult> BlockUser(int userId, [FromBody] BlockUserRequest request, CancellationToken cancellationToken)
+        [HttpPut("{userId:guid}/block")]
+        public async Task<IActionResult> BlockUser(Guid userId, [FromBody] BlockUserRequest request, CancellationToken cancellationToken)
         {
             var user = await _db.Users.FirstOrDefaultAsync(x => x.Id == userId, cancellationToken);
             if (user == null) return NotFound();

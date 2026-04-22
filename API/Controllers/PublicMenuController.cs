@@ -1,6 +1,8 @@
 using Infrastructure.Persistence;
+using API.Common.Language;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Domain.Enum;
 
 namespace API.Controllers
 {
@@ -17,6 +19,8 @@ namespace API.Controllers
         public async Task<IActionResult> GetMenuByCafeCode(string cafeCode, CancellationToken cancellationToken)
         {
             var code = cafeCode.Trim().ToLowerInvariant();
+            var lang = LanguageResolver.Resolve(Request);
+            var fallbackLang = lang == LanguageCode.En ? LanguageCode.Vi : LanguageCode.En;
 
             var cafe = await _db.Cafes.FirstOrDefaultAsync(x => x.Code == code && x.IsActive, cancellationToken);
             if (cafe == null) return NotFound();
@@ -28,8 +32,14 @@ namespace API.Controllers
                 {
                     x.Id,
                     x.Slug,
-                    x.Name,
-                    x.Description,
+                    Name =
+                        x.Translations.Where(t => t.Language == lang).Select(t => t.Name).FirstOrDefault()
+                        ?? x.Translations.Where(t => t.Language == fallbackLang).Select(t => t.Name).FirstOrDefault()
+                        ?? x.Name,
+                    Description =
+                        x.Translations.Where(t => t.Language == lang).Select(t => t.Description).FirstOrDefault()
+                        ?? x.Translations.Where(t => t.Language == fallbackLang).Select(t => t.Description).FirstOrDefault()
+                        ?? x.Description,
                     x.DisplayOrder,
                     items = x.Items
                         .Where(i => i.IsActive)
@@ -38,8 +48,14 @@ namespace API.Controllers
                         {
                             i.Id,
                             i.Slug,
-                            i.Name,
-                            i.Description,
+                            Name =
+                                i.Translations.Where(t => t.Language == lang).Select(t => t.Name).FirstOrDefault()
+                                ?? i.Translations.Where(t => t.Language == fallbackLang).Select(t => t.Name).FirstOrDefault()
+                                ?? i.Name,
+                            Description =
+                                i.Translations.Where(t => t.Language == lang).Select(t => t.Description).FirstOrDefault()
+                                ?? i.Translations.Where(t => t.Language == fallbackLang).Select(t => t.Description).FirstOrDefault()
+                                ?? i.Description,
                             i.ImageUrl,
                             i.BasePrice,
                             i.Currency,
@@ -48,16 +64,23 @@ namespace API.Controllers
                 })
                 .ToListAsync(cancellationToken);
 
+            var cafeName = await _db.CafeTranslations
+                .Where(t => t.CafeId == cafe.Id && (t.Language == lang || t.Language == fallbackLang))
+                .OrderBy(t => t.Language == lang ? 0 : 1)
+                .Select(t => t.Name)
+                .FirstOrDefaultAsync(cancellationToken) ?? cafe.Name;
+
             return Ok(new
             {
                 cafe = new
                 {
                     cafe.Id,
                     cafe.Code,
-                    cafe.Name,
+                    Name = cafeName,
                     cafe.LogoUrl,
                     cafe.HeroImageUrl
                 },
+                lang = lang.ToString().ToLowerInvariant(),
                 categories
             });
         }

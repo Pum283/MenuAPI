@@ -21,6 +21,7 @@ namespace Domain.Entity
 
         public ICollection<CafeMember> Members { get; set; } = new List<CafeMember>();
         public ICollection<MenuCategory> Categories { get; set; } = new List<MenuCategory>();
+        public ICollection<CafeTranslation> Translations { get; set; } = new List<CafeTranslation>();
     }
 }
 

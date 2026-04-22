@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Infrastructure.Persistence.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialMenuApi : Migration
+    public partial class InitialGuidSchema : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -17,8 +17,7 @@ namespace Infrastructure.Persistence.Migrations
                 name: "Cafes",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
                     Code = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     Name = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
                     LogoUrl = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
@@ -43,8 +42,7 @@ namespace Infrastructure.Persistence.Migrations
                 name: "Roles",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
                     Code = table.Column<int>(type: "int", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
@@ -59,8 +57,7 @@ namespace Infrastructure.Persistence.Migrations
                 name: "Users",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
                     PasswordHash = table.Column<string>(type: "nvarchar(300)", maxLength: 300, nullable: false),
                     Status = table.Column<int>(type: "int", nullable: false, defaultValue: 1),
@@ -83,9 +80,8 @@ namespace Infrastructure.Persistence.Migrations
                 name: "MenuCategories",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    CafeId = table.Column<int>(type: "int", nullable: false),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
+                    CafeId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Slug = table.Column<string>(type: "nvarchar(120)", maxLength: 120, nullable: false),
                     Name = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
                     Description = table.Column<string>(type: "nvarchar(800)", maxLength: 800, nullable: true),
@@ -114,10 +110,9 @@ namespace Infrastructure.Persistence.Migrations
                 name: "CafeMembers",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    CafeId = table.Column<int>(type: "int", nullable: false),
-                    UserId = table.Column<int>(type: "int", nullable: false),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
+                    CafeId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Status = table.Column<int>(type: "int", nullable: false, defaultValue: 1),
                     BlockedReason = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
                     BlockedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -147,8 +142,8 @@ namespace Infrastructure.Persistence.Migrations
                 name: "UserRoles",
                 columns: table => new
                 {
-                    UserId = table.Column<int>(type: "int", nullable: false),
-                    RoleId = table.Column<int>(type: "int", nullable: false)
+                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    RoleId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -171,10 +166,9 @@ namespace Infrastructure.Persistence.Migrations
                 name: "MenuItems",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    CafeId = table.Column<int>(type: "int", nullable: false),
-                    CategoryId = table.Column<int>(type: "int", nullable: false),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false, defaultValueSql: "NEWSEQUENTIALID()"),
+                    CafeId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CategoryId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Slug = table.Column<string>(type: "nvarchar(120)", maxLength: 120, nullable: false),
                     Name = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
                     Description = table.Column<string>(type: "nvarchar(1200)", maxLength: 1200, nullable: true),
@@ -214,9 +208,19 @@ namespace Infrastructure.Persistence.Migrations
                 columns: new[] { "Id", "Code", "CreatedDate", "Name", "UpdatedDate" },
                 values: new object[,]
                 {
-                    { 1, 1, new DateTime(2026, 4, 22, 3, 45, 58, 991, DateTimeKind.Utc).AddTicks(1371), "Admin", null },
-                    { 2, 2, new DateTime(2026, 4, 22, 3, 45, 58, 991, DateTimeKind.Utc).AddTicks(1376), "Brand", null }
+                    { new Guid("11111111-1111-1111-1111-111111111111"), 1, new DateTime(2026, 4, 22, 4, 54, 25, 730, DateTimeKind.Utc).AddTicks(2498), "Admin", null },
+                    { new Guid("22222222-2222-2222-2222-222222222222"), 2, new DateTime(2026, 4, 22, 4, 54, 25, 730, DateTimeKind.Utc).AddTicks(2506), "Brand", null }
                 });
+
+            migrationBuilder.InsertData(
+                table: "Users",
+                columns: new[] { "Id", "BlockedAt", "BlockedReason", "CreatedBy", "CreatedDate", "DeletedBy", "DeletedDate", "Email", "IsDeleted", "PasswordHash", "Status", "UpdatedBy", "UpdatedDate" },
+                values: new object[] { new Guid("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa"), null, null, "seed", new DateTime(2026, 4, 22, 0, 0, 0, 0, DateTimeKind.Utc), null, null, "admin@gmail.com", false, "$2a$11$iV9hWKbffZV/dVcS/MVViu.l/LBM7Jc95XBVSESd0pD91Yc5bSH.a", 1, null, null });
+
+            migrationBuilder.InsertData(
+                table: "UserRoles",
+                columns: new[] { "RoleId", "UserId" },
+                values: new object[] { new Guid("11111111-1111-1111-1111-111111111111"), new Guid("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa") });
 
             migrationBuilder.CreateIndex(
                 name: "IX_CafeMembers_CafeId_UserId",

@@ -11,6 +11,7 @@ namespace Infrastructure.Persistence.Configurations
             builder.ToTable("Cafes");
 
             builder.HasKey(x => x.Id);
+            builder.Property(x => x.Id).ValueGeneratedOnAdd().HasDefaultValueSql("NEWSEQUENTIALID()");
 
             builder.Property(x => x.Code).IsRequired().HasMaxLength(100);
             builder.Property(x => x.Name).IsRequired().HasMaxLength(200);

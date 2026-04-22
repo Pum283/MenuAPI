@@ -18,6 +18,9 @@ namespace Infrastructure.Persistence
         public DbSet<CafeMember> CafeMembers => Set<CafeMember>();
         public DbSet<MenuCategory> MenuCategories => Set<MenuCategory>();
         public DbSet<MenuItem> MenuItems => Set<MenuItem>();
+        public DbSet<CafeTranslation> CafeTranslations => Set<CafeTranslation>();
+        public DbSet<MenuCategoryTranslation> MenuCategoryTranslations => Set<MenuCategoryTranslation>();
+        public DbSet<MenuItemTranslation> MenuItemTranslations => Set<MenuItemTranslation>();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

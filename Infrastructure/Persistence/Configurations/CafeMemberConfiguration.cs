@@ -12,6 +12,7 @@ namespace Infrastructure.Persistence.Configurations
             builder.ToTable("CafeMembers");
 
             builder.HasKey(x => x.Id);
+            builder.Property(x => x.Id).ValueGeneratedOnAdd().HasDefaultValueSql("NEWSEQUENTIALID()");
 
             builder.Property(x => x.Status).HasConversion<int>().HasDefaultValue(MemberStatus.Active);
             builder.Property(x => x.BlockedReason).HasMaxLength(500);

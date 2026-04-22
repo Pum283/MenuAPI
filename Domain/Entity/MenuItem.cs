@@ -4,10 +4,10 @@ namespace Domain.Entity
 {
     public class MenuItem : BaseAuditableEntity, ISoftDelete
     {
-        public int CafeId { get; set; }
+        public Guid CafeId { get; set; }
         public Cafe Cafe { get; set; } = null!;
 
-        public int CategoryId { get; set; }
+        public Guid CategoryId { get; set; }
         public MenuCategory Category { get; set; } = null!;
 
         public string Slug { get; set; } = string.Empty;
@@ -26,6 +26,8 @@ namespace Domain.Entity
         public bool IsDeleted { get; set; }
         public DateTime? DeletedDate { get; set; }
         public string? DeletedBy { get; set; }
+
+        public ICollection<MenuItemTranslation> Translations { get; set; } = new List<MenuItemTranslation>();
     }
 }
 

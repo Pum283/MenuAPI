@@ -4,7 +4,7 @@ namespace Domain.Entity
 {
     public class MenuCategory : BaseAuditableEntity, ISoftDelete
     {
-        public int CafeId { get; set; }
+        public Guid CafeId { get; set; }
         public Cafe Cafe { get; set; } = null!;
 
         public string Slug { get; set; } = string.Empty;
@@ -19,6 +19,7 @@ namespace Domain.Entity
         public string? DeletedBy { get; set; }
 
         public ICollection<MenuItem> Items { get; set; } = new List<MenuItem>();
+        public ICollection<MenuCategoryTranslation> Translations { get; set; } = new List<MenuCategoryTranslation>();
     }
 }
 

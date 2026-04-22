@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260422034847_SeedAdminUser")]
-    partial class SeedAdminUser
+    [Migration("20260422045426_InitialGuidSchema")]
+    partial class InitialGuidSchema
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -27,11 +27,10 @@ namespace Infrastructure.Persistence.Migrations
 
             modelBuilder.Entity("Domain.Entity.Cafe", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
 
                     b.Property<string>("Code")
                         .IsRequired()
@@ -93,11 +92,10 @@ namespace Infrastructure.Persistence.Migrations
 
             modelBuilder.Entity("Domain.Entity.CafeMember", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
 
                     b.Property<DateTime?>("BlockedAt")
                         .HasColumnType("datetime2");
@@ -106,8 +104,8 @@ namespace Infrastructure.Persistence.Migrations
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 
-                    b.Property<int>("CafeId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("CafeId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
@@ -126,8 +124,8 @@ namespace Infrastructure.Persistence.Migrations
                     b.Property<DateTime?>("UpdatedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
@@ -141,14 +139,13 @@ namespace Infrastructure.Persistence.Migrations
 
             modelBuilder.Entity("Domain.Entity.MenuCategory", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("CafeId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("CafeId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
@@ -203,20 +200,19 @@ namespace Infrastructure.Persistence.Migrations
 
             modelBuilder.Entity("Domain.Entity.MenuItem", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
 
                     b.Property<decimal?>("BasePrice")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<int>("CafeId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("CafeId")
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("CategoryId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("CategoryId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
@@ -288,11 +284,10 @@ namespace Infrastructure.Persistence.Migrations
 
             modelBuilder.Entity("Domain.Entity.Role", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
 
                     b.Property<int>("Code")
                         .HasColumnType("int");
@@ -318,27 +313,26 @@ namespace Infrastructure.Persistence.Migrations
                     b.HasData(
                         new
                         {
-                            Id = 1,
+                            Id = new Guid("11111111-1111-1111-1111-111111111111"),
                             Code = 1,
-                            CreatedDate = new DateTime(2026, 4, 22, 3, 48, 46, 127, DateTimeKind.Utc).AddTicks(412),
+                            CreatedDate = new DateTime(2026, 4, 22, 4, 54, 25, 730, DateTimeKind.Utc).AddTicks(2498),
                             Name = "Admin"
                         },
                         new
                         {
-                            Id = 2,
+                            Id = new Guid("22222222-2222-2222-2222-222222222222"),
                             Code = 2,
-                            CreatedDate = new DateTime(2026, 4, 22, 3, 48, 46, 127, DateTimeKind.Utc).AddTicks(418),
+                            CreatedDate = new DateTime(2026, 4, 22, 4, 54, 25, 730, DateTimeKind.Utc).AddTicks(2506),
                             Name = "Brand"
                         });
                 });
 
             modelBuilder.Entity("Domain.Entity.User", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
 
                     b.Property<DateTime?>("BlockedAt")
                         .HasColumnType("datetime2");
@@ -393,7 +387,7 @@ namespace Infrastructure.Persistence.Migrations
                     b.HasData(
                         new
                         {
-                            Id = 1,
+                            Id = new Guid("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa"),
                             CreatedBy = "seed",
                             CreatedDate = new DateTime(2026, 4, 22, 0, 0, 0, 0, DateTimeKind.Utc),
                             Email = "admin@gmail.com",
@@ -405,11 +399,11 @@ namespace Infrastructure.Persistence.Migrations
 
             modelBuilder.Entity("Domain.Entity.UserRole", b =>
                 {
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("RoleId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("RoleId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("UserId", "RoleId");
 
@@ -420,8 +414,8 @@ namespace Infrastructure.Persistence.Migrations
                     b.HasData(
                         new
                         {
-                            UserId = 1,
-                            RoleId = 1
+                            UserId = new Guid("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa"),
+                            RoleId = new Guid("11111111-1111-1111-1111-111111111111")
                         });
                 });
 

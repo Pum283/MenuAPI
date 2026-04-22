@@ -11,6 +11,7 @@ namespace Infrastructure.Persistence.Configurations
             builder.ToTable("MenuCategories");
 
             builder.HasKey(x => x.Id);
+            builder.Property(x => x.Id).ValueGeneratedOnAdd().HasDefaultValueSql("NEWSEQUENTIALID()");
 
             builder.Property(x => x.Slug).IsRequired().HasMaxLength(120);
             builder.Property(x => x.Name).IsRequired().HasMaxLength(200);

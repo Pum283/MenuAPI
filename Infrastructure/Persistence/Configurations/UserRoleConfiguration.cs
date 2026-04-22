@@ -26,8 +26,8 @@ namespace Infrastructure.Persistence.Configurations
             // Seed admin role assignment
             builder.HasData(new UserRole
             {
-                UserId = 1,
-                RoleId = 1 // RoleCode.Admin (seeded in RoleConfiguration)
+                UserId = UserConfiguration.AdminUserId,
+                RoleId = RoleConfiguration.AdminRoleId
             });
         }
     }

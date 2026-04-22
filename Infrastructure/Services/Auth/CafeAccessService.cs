@@ -14,13 +14,13 @@ namespace Infrastructure.Services.Auth
             _db = db;
         }
 
-        public async Task<bool> IsAdminAsync(int userId, CancellationToken cancellationToken = default)
+        public async Task<bool> IsAdminAsync(Guid userId, CancellationToken cancellationToken = default)
         {
             return await _db.UserRoles
                 .AnyAsync(x => x.UserId == userId && x.Role.Code == RoleCode.Admin, cancellationToken);
         }
 
-        public async Task<bool> CanManageCafeAsync(int userId, int cafeId, CancellationToken cancellationToken = default)
+        public async Task<bool> CanManageCafeAsync(Guid userId, Guid cafeId, CancellationToken cancellationToken = default)
         {
             if (await IsAdminAsync(userId, cancellationToken)) return true;
 

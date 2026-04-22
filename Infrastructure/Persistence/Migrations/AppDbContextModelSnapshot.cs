@@ -24,11 +24,10 @@ namespace Infrastructure.Persistence.Migrations
 
             modelBuilder.Entity("Domain.Entity.Cafe", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
 
                     b.Property<string>("Code")
                         .IsRequired()
@@ -90,11 +89,10 @@ namespace Infrastructure.Persistence.Migrations
 
             modelBuilder.Entity("Domain.Entity.CafeMember", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
 
                     b.Property<DateTime?>("BlockedAt")
                         .HasColumnType("datetime2");
@@ -103,8 +101,8 @@ namespace Infrastructure.Persistence.Migrations
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 
-                    b.Property<int>("CafeId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("CafeId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
@@ -123,8 +121,8 @@ namespace Infrastructure.Persistence.Migrations
                     b.Property<DateTime?>("UpdatedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
@@ -136,16 +134,53 @@ namespace Infrastructure.Persistence.Migrations
                     b.ToTable("CafeMembers", (string)null);
                 });
 
+            modelBuilder.Entity("Domain.Entity.CafeTranslation", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    b.Property<Guid>("CafeId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("Language")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("UpdatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CafeId", "Language")
+                        .IsUnique();
+
+                    b.ToTable("CafeTranslations", (string)null);
+                });
+
             modelBuilder.Entity("Domain.Entity.MenuCategory", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("CafeId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("CafeId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
@@ -198,22 +233,63 @@ namespace Infrastructure.Persistence.Migrations
                     b.ToTable("MenuCategories", (string)null);
                 });
 
-            modelBuilder.Entity("Domain.Entity.MenuItem", b =>
+            modelBuilder.Entity("Domain.Entity.MenuCategoryTranslation", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<int>("Language")
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    b.Property<Guid>("MenuCategoryId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("UpdatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("MenuCategoryId", "Language")
+                        .IsUnique();
+
+                    b.ToTable("MenuCategoryTranslations", (string)null);
+                });
+
+            modelBuilder.Entity("Domain.Entity.MenuItem", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
 
                     b.Property<decimal?>("BasePrice")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<int>("CafeId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("CafeId")
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("CategoryId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("CategoryId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
@@ -283,13 +359,54 @@ namespace Infrastructure.Persistence.Migrations
                     b.ToTable("MenuItems", (string)null);
                 });
 
-            modelBuilder.Entity("Domain.Entity.Role", b =>
+            modelBuilder.Entity("Domain.Entity.MenuItemTranslation", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(2000)
+                        .HasColumnType("nvarchar(2000)");
+
+                    b.Property<int>("Language")
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    b.Property<Guid>("MenuItemId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("UpdatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("MenuItemId", "Language")
+                        .IsUnique();
+
+                    b.ToTable("MenuItemTranslations", (string)null);
+                });
+
+            modelBuilder.Entity("Domain.Entity.Role", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
 
                     b.Property<int>("Code")
                         .HasColumnType("int");
@@ -315,27 +432,26 @@ namespace Infrastructure.Persistence.Migrations
                     b.HasData(
                         new
                         {
-                            Id = 1,
+                            Id = new Guid("11111111-1111-1111-1111-111111111111"),
                             Code = 1,
-                            CreatedDate = new DateTime(2026, 4, 22, 3, 48, 46, 127, DateTimeKind.Utc).AddTicks(412),
+                            CreatedDate = new DateTime(2026, 4, 22, 8, 31, 13, 697, DateTimeKind.Utc).AddTicks(6158),
                             Name = "Admin"
                         },
                         new
                         {
-                            Id = 2,
+                            Id = new Guid("22222222-2222-2222-2222-222222222222"),
                             Code = 2,
-                            CreatedDate = new DateTime(2026, 4, 22, 3, 48, 46, 127, DateTimeKind.Utc).AddTicks(418),
+                            CreatedDate = new DateTime(2026, 4, 22, 8, 31, 13, 697, DateTimeKind.Utc).AddTicks(6186),
                             Name = "Brand"
                         });
                 });
 
             modelBuilder.Entity("Domain.Entity.User", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWSEQUENTIALID()");
 
                     b.Property<DateTime?>("BlockedAt")
                         .HasColumnType("datetime2");
@@ -390,7 +506,7 @@ namespace Infrastructure.Persistence.Migrations
                     b.HasData(
                         new
                         {
-                            Id = 1,
+                            Id = new Guid("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa"),
                             CreatedBy = "seed",
                             CreatedDate = new DateTime(2026, 4, 22, 0, 0, 0, 0, DateTimeKind.Utc),
                             Email = "admin@gmail.com",
@@ -402,11 +518,11 @@ namespace Infrastructure.Persistence.Migrations
 
             modelBuilder.Entity("Domain.Entity.UserRole", b =>
                 {
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("RoleId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("RoleId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("UserId", "RoleId");
 
@@ -417,8 +533,8 @@ namespace Infrastructure.Persistence.Migrations
                     b.HasData(
                         new
                         {
-                            UserId = 1,
-                            RoleId = 1
+                            UserId = new Guid("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa"),
+                            RoleId = new Guid("11111111-1111-1111-1111-111111111111")
                         });
                 });
 
@@ -441,6 +557,17 @@ namespace Infrastructure.Persistence.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("Domain.Entity.CafeTranslation", b =>
+                {
+                    b.HasOne("Domain.Entity.Cafe", "Cafe")
+                        .WithMany("Translations")
+                        .HasForeignKey("CafeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Cafe");
+                });
+
             modelBuilder.Entity("Domain.Entity.MenuCategory", b =>
                 {
                     b.HasOne("Domain.Entity.Cafe", "Cafe")
@@ -450,6 +577,17 @@ namespace Infrastructure.Persistence.Migrations
                         .IsRequired();
 
                     b.Navigation("Cafe");
+                });
+
+            modelBuilder.Entity("Domain.Entity.MenuCategoryTranslation", b =>
+                {
+                    b.HasOne("Domain.Entity.MenuCategory", "MenuCategory")
+                        .WithMany("Translations")
+                        .HasForeignKey("MenuCategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("MenuCategory");
                 });
 
             modelBuilder.Entity("Domain.Entity.MenuItem", b =>
@@ -469,6 +607,17 @@ namespace Infrastructure.Persistence.Migrations
                     b.Navigation("Cafe");
 
                     b.Navigation("Category");
+                });
+
+            modelBuilder.Entity("Domain.Entity.MenuItemTranslation", b =>
+                {
+                    b.HasOne("Domain.Entity.MenuItem", "MenuItem")
+                        .WithMany("Translations")
+                        .HasForeignKey("MenuItemId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("MenuItem");
                 });
 
             modelBuilder.Entity("Domain.Entity.UserRole", b =>
@@ -495,11 +644,20 @@ namespace Infrastructure.Persistence.Migrations
                     b.Navigation("Categories");
 
                     b.Navigation("Members");
+
+                    b.Navigation("Translations");
                 });
 
             modelBuilder.Entity("Domain.Entity.MenuCategory", b =>
                 {
                     b.Navigation("Items");
+
+                    b.Navigation("Translations");
+                });
+
+            modelBuilder.Entity("Domain.Entity.MenuItem", b =>
+                {
+                    b.Navigation("Translations");
                 });
 
             modelBuilder.Entity("Domain.Entity.Role", b =>

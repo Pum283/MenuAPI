@@ -22,14 +22,14 @@ namespace API.Controllers
             _media = media;
         }
 
-        private static int GetUserId(ClaimsPrincipal user)
+        private static Guid GetUserId(ClaimsPrincipal user)
         {
             var raw = user.FindFirstValue(ClaimTypes.NameIdentifier);
-            return int.TryParse(raw, out var id) ? id : 0;
+            return Guid.TryParse(raw, out var id) ? id : Guid.Empty;
         }
 
-        [HttpPut("cafes/{cafeId:int}/logo")]
-        public async Task<IActionResult> SetCafeLogo(int cafeId, IFormFile file, CancellationToken cancellationToken)
+        [HttpPut("cafes/{cafeId:guid}/logo")]
+        public async Task<IActionResult> SetCafeLogo(Guid cafeId, IFormFile file, CancellationToken cancellationToken)
         {
             var userId = GetUserId(User);
             if (!await _access.CanManageCafeAsync(userId, cafeId, cancellationToken)) return Forbid();
@@ -47,8 +47,8 @@ namespace API.Controllers
             return Ok(new { cafe.Id, cafe.LogoUrl, cafe.LogoPublicId });
         }
 
-        [HttpPut("cafes/{cafeId:int}/hero")]
-        public async Task<IActionResult> SetCafeHero(int cafeId, IFormFile file, CancellationToken cancellationToken)
+        [HttpPut("cafes/{cafeId:guid}/hero")]
+        public async Task<IActionResult> SetCafeHero(Guid cafeId, IFormFile file, CancellationToken cancellationToken)
         {
             var userId = GetUserId(User);
             if (!await _access.CanManageCafeAsync(userId, cafeId, cancellationToken)) return Forbid();
@@ -66,8 +66,8 @@ namespace API.Controllers
             return Ok(new { cafe.Id, cafe.HeroImageUrl, cafe.HeroImagePublicId });
         }
 
-        [HttpPut("menu-items/{itemId:int}/image")]
-        public async Task<IActionResult> SetMenuItemImage(int itemId, IFormFile file, CancellationToken cancellationToken)
+        [HttpPut("menu-items/{itemId:guid}/image")]
+        public async Task<IActionResult> SetMenuItemImage(Guid itemId, IFormFile file, CancellationToken cancellationToken)
         {
             var userId = GetUserId(User);
 
