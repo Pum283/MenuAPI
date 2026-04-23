@@ -35,6 +35,8 @@ namespace Infrastructure.Services.Media
                 PublicId = overwritePublicId,
                 Overwrite = !string.IsNullOrWhiteSpace(overwritePublicId),
                 UniqueFilename = string.IsNullOrWhiteSpace(overwritePublicId),
+                // Prefer high-quality delivery defaults (does not upscale source).
+                Transformation = new Transformation().FetchFormat("auto").Quality("auto:best"),
             };
 
             var result = await _cloudinary.UploadAsync(uploadParams, cancellationToken);

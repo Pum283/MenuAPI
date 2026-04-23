@@ -29,6 +29,7 @@ namespace API.Controllers
         }
 
         [HttpPut("cafes/{cafeId:guid}/logo")]
+        [RequestSizeLimit(50 * 1024 * 1024)]
         public async Task<IActionResult> SetCafeLogo(Guid cafeId, IFormFile file, CancellationToken cancellationToken)
         {
             var userId = GetUserId(User);
@@ -48,6 +49,7 @@ namespace API.Controllers
         }
 
         [HttpPut("cafes/{cafeId:guid}/hero")]
+        [RequestSizeLimit(50 * 1024 * 1024)]
         public async Task<IActionResult> SetCafeHero(Guid cafeId, IFormFile file, CancellationToken cancellationToken)
         {
             var userId = GetUserId(User);
@@ -67,6 +69,7 @@ namespace API.Controllers
         }
 
         [HttpPut("menu-items/{itemId:guid}/image")]
+        [RequestSizeLimit(50 * 1024 * 1024)]
         public async Task<IActionResult> SetMenuItemImage(Guid itemId, IFormFile file, CancellationToken cancellationToken)
         {
             var userId = GetUserId(User);

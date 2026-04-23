@@ -7,6 +7,7 @@ using Infrastructure.Services.Media;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Http.Features;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -107,6 +108,14 @@ builder.Services
     });
 
 builder.Services.AddAuthorization();
+
+// Upload limits (default 50MB). Override with env: MENUAPI_UPLOAD_MAX_MB
+var uploadMaxMbRaw = Environment.GetEnvironmentVariable("MENUAPI_UPLOAD_MAX_MB");
+var uploadMaxMb = int.TryParse(uploadMaxMbRaw, out var mb) && mb > 0 ? mb : 50;
+builder.Services.Configure<FormOptions>(o =>
+{
+    o.MultipartBodyLengthLimit = uploadMaxMb * 1024L * 1024L;
+});
 
 var app = builder.Build();
 
